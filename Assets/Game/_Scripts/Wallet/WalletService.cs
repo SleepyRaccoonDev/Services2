@@ -4,29 +4,37 @@ using UnityEngine;
 
 public class WalletService
 {
-    public event Action<CurrencyType, int> CurrencyChanged;
+    private Dictionary<CurrencyType, IReadOnlyVariable<float>> _currencies = new Dictionary<CurrencyType, IReadOnlyVariable<float>>();
 
-    private Dictionary<CurrencyType, int> _currencies = new Dictionary<CurrencyType, int>();
+    public WalletService()
+    {
+        foreach (CurrencyType type in Enum.GetValues(typeof(CurrencyType)))
+            TryChangeAmountOnCurrency(type, default);
+    }
 
-    public bool TryChangeAmountOnCurrency(CurrencyType currencyType, int value)
+    public IReadOnlyDictionary<CurrencyType, IReadOnlyVariable<float>> Currencies => _currencies;
+
+    public bool TryChangeAmountOnCurrency(CurrencyType currencyType, float value)
     {
         if (_currencies.ContainsKey(currencyType) == false)
             AddNewCurrencyTypeInWallet(currencyType);
 
-        if (_currencies[currencyType] + value < 0)
-            return false;
+        if (_currencies[currencyType].Value + value < 0)
+            return ExeptionLogic(currencyType);
 
-        _currencies[currencyType] += value;
+        if (_currencies[currencyType] is ReactiveVariable<float> ractive)
+        {
+            ractive.Value += value;
+            return true;
+        }
 
-        CurrencyChanged?.Invoke(currencyType, _currencies[currencyType]);
-
-        return true;
+        return ExeptionLogic(currencyType);
     }
 
-    public int GetAmountBy(CurrencyType currencyType)
+    public float GetAmountBy(CurrencyType currencyType)
     {
-        if (_currencies.TryGetValue(currencyType, out int amount))
-            return amount;
+        if (_currencies.TryGetValue(currencyType, out IReadOnlyVariable<float> amount))
+            return amount.Value;
 
         Debug.LogError("Currency is not founded!");
 
@@ -36,6 +44,12 @@ public class WalletService
 
     private void AddNewCurrencyTypeInWallet(CurrencyType currencyType)
     {
-        _currencies.Add(currencyType, 0);
+        _currencies.Add(currencyType, new ReactiveVariable<float>(0));
+    }
+
+    private bool ExeptionLogic(CurrencyType currencyType)
+    {
+        Debug.Log($"{currencyType} if wallet is not changed!");
+        return false;
     }
 }

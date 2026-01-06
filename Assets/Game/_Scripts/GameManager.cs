@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +17,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textMeshMoney;
 
     private WalletService _walletService;
-
-    private WalletCurrencyViewer _viewerDiamonds;
-    private WalletCurrencyViewer _viewerEnergy;
-    private WalletCurrencyViewer _viewerMoney;
 
     private TimerService _timerService;
 
@@ -45,6 +43,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Enemy _enemyPrefub;
     [SerializeField] private int _maxCountForDeath;
 
+    private List<IDisposable> _disposables = new();
+
     private void Awake()
     {
         _inputSystem = new InputSystem();
@@ -53,9 +53,9 @@ public class GameManager : MonoBehaviour
 
         _ui.SetActive(true);
 
-        _viewerDiamonds = new WalletCurrencyViewer(_walletService, _textMeshDiamonds, CurrencyType.Diamonds);
-        _viewerEnergy = new WalletCurrencyViewer(_walletService, _textMeshEnergy, CurrencyType.Energy);
-        _viewerMoney = new WalletCurrencyViewer(_walletService, _textMeshMoney, CurrencyType.Money);
+        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshDiamonds, CurrencyType.Diamonds));
+        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshEnergy, CurrencyType.Energy));
+        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshMoney, CurrencyType.Money));
 
         _timerService = new TimerService(this);
 
@@ -68,9 +68,8 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        _viewerDiamonds.Disable();
-        _viewerEnergy.Disable();
-        _viewerMoney.Disable();
+        foreach (IDisposable disposable in _disposables)
+            disposable.Dispose();
 
         _timerViewer.Disable();
         _timerSliderViewer.Disable();
@@ -81,13 +80,13 @@ public class GameManager : MonoBehaviour
     {
         if (_inputSystem.GetKeyDownAlpha1())
         {
-            int value = Random.Range(MinRangeValue, MaxRangeValue);
+            int value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
             _walletService.TryChangeAmountOnCurrency(CurrencyType.Energy, value);
 
-            value = Random.Range(MinRangeValue, MaxRangeValue);
+            value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
             _walletService.TryChangeAmountOnCurrency(CurrencyType.Diamonds, value);
 
-            value = Random.Range(MinRangeValue, MaxRangeValue);
+            value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
             _walletService.TryChangeAmountOnCurrency(CurrencyType.Money, value);
         }
 

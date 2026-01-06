@@ -1,6 +1,7 @@
+using System;
 using TMPro;
 
-public class WalletCurrencyViewer
+public class WalletCurrencyViewer : IDisposable
 {
     private WalletService _walletService;
     private TextMeshProUGUI _textMesh;
@@ -12,17 +13,16 @@ public class WalletCurrencyViewer
         _textMesh = textMesh;
         _currencyType = currencyType;
 
-        walletService.CurrencyChanged += OnCurrencyChanged;
+        walletService.Currencies[_currencyType].Changed += OnCurrencyChanged;
     }
 
-    public void Disable()
+    public void Dispose()
     {
-        _walletService.CurrencyChanged -= OnCurrencyChanged;
+        _walletService.Currencies[_currencyType].Changed -= OnCurrencyChanged;
     }
 
-    private void OnCurrencyChanged(CurrencyType currencyType, int value)
+    private void OnCurrencyChanged(float value)
     {
-        if (currencyType == _currencyType)
-            _textMesh.SetText($"{value}");
+        _textMesh.SetText($"{value}");
     }
 }
