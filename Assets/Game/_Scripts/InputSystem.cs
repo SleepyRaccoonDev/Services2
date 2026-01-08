@@ -2,9 +2,14 @@ using UnityEngine;
 
 public class InputSystem
 {
-    public bool GetKeyDownAlpha1()
+    public bool GetKeyDownAlphaQ()
     {
-        return Input.GetKeyDown(KeyCode.Alpha1);
+        return Input.GetKeyDown(KeyCode.Q);
+    }
+
+    public bool GetKeyDownAlphaW()
+    {
+        return Input.GetKeyDown(KeyCode.W);
     }
 
     public bool GetKeyDownAlpha2()

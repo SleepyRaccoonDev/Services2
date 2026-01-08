@@ -9,47 +9,91 @@ public class WalletService
     public WalletService()
     {
         foreach (CurrencyType type in Enum.GetValues(typeof(CurrencyType)))
-            TryChangeAmountOnCurrency(type, default);
+            AddNewCurrencyTypeInWallet(type);
     }
 
     public IReadOnlyDictionary<CurrencyType, IReadOnlyVariable<float>> Currencies => _currencies;
 
-    public bool TryChangeAmountOnCurrency(CurrencyType currencyType, float value)
+    public void Add(CurrencyType currencyType, float value)
     {
         if (_currencies.ContainsKey(currencyType) == false)
             AddNewCurrencyTypeInWallet(currencyType);
 
-        if (_currencies[currencyType].Value + value < 0)
-            return ExeptionLogic(currencyType);
+        if (value < 0)
+        {
+            NegativeValueExeption(currencyType);
+            return;
+        }  
 
         if (_currencies[currencyType] is ReactiveVariable<float> ractive)
         {
             ractive.Value += value;
+            return;
+        }
+
+        ChangeAmountInWalletExeption(currencyType);
+    }
+
+    public bool TrySpend(CurrencyType currencyType, float value)
+    {
+        if (_currencies.ContainsKey(currencyType) == false)
+            AddNewCurrencyTypeInWallet(currencyType);
+
+        if (value < 0)
+        {
+            NegativeValueExeption(currencyType);
+            return false;
+        }
+
+        if (_currencies[currencyType] is ReactiveVariable<float> ractive)
+        {
+            if (ractive.Value - value >= 0)
+            {
+                ractive.Value -= value;
+                return true;
+            }
+            else
+            {
+                NotEnoughMoneyExeption(currencyType);
+            }
+        }
+
+        ChangeAmountInWalletExeption(currencyType);
+
+        return false;
+    }
+
+    public bool TryGetAmountBy(CurrencyType currencyType, out float result)
+    {
+        if (_currencies.TryGetValue(currencyType, out IReadOnlyVariable<float> amount))
+        {
+            result = amount.Value;
             return true;
         }
 
-        return ExeptionLogic(currencyType);
-    }
+        result = 0;
 
-    public float GetAmountBy(CurrencyType currencyType)
-    {
-        if (_currencies.TryGetValue(currencyType, out IReadOnlyVariable<float> amount))
-            return amount.Value;
-
-        Debug.LogError("Currency is not founded!");
-
-        return 0;
+        return false;
     }
 
 
     private void AddNewCurrencyTypeInWallet(CurrencyType currencyType)
     {
-        _currencies.Add(currencyType, new ReactiveVariable<float>(0));
+        _currencies.Add(currencyType, new ReactiveVariable<float>(default));
     }
 
-    private bool ExeptionLogic(CurrencyType currencyType)
+    private void NegativeValueExeption(CurrencyType currencyType)
     {
-        Debug.Log($"{currencyType} if wallet is not changed!");
-        return false;
+        Debug.Log($"Currency - {currencyType}. Incoming value is negative!");
+    }
+
+    private void ChangeAmountInWalletExeption(CurrencyType currencyType)
+    {
+        Debug.Log($"Currency - {currencyType}. The balance has not been topped up!");
+    }
+
+    private void NotEnoughMoneyExeption(CurrencyType currencyType)
+    {
+        Debug.Log($"Currency - {currencyType}. Not enough money!");
     }
 }

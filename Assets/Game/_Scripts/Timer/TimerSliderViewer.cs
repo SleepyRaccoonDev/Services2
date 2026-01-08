@@ -1,6 +1,7 @@
+using System;
 using UnityEngine.UI;
 
-public class TimerSliderViewer 
+public class TimerSliderViewer : IDisposable
 {
     private TimerService _timerService;
     private Slider _slider;
@@ -10,16 +11,16 @@ public class TimerSliderViewer
         _timerService = timerService;
         _slider = slider;
 
-        _timerService.TimeChanged += OnTimeChanged;
+        _timerService.CurrentTime.Changed += OnTimeChanged;
     }
 
-    public void Disable()
+    public void Dispose()
     {
-        _timerService.TimeChanged -= OnTimeChanged;
+        _timerService.CurrentTime.Changed -= OnTimeChanged;
     }
 
     private void OnTimeChanged(float value)
     {
-        _slider.value = value / _timerService.Timer;
+        _slider.value = value / _timerService.StartTime.Value;
     }
 }

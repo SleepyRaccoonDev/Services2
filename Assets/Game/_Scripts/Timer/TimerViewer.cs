@@ -1,7 +1,7 @@
 using System;
 using TMPro;
 
-public class TimerViewer
+public class TimerViewer :IDisposable
 {
     private TimerService _timerService;
     private TextMeshProUGUI _textMeshPro;
@@ -11,12 +11,12 @@ public class TimerViewer
         _timerService = timerService;
         _textMeshPro = textMeshPro;
 
-        _timerService.TimeChanged += OnTimeChanged;
+        _timerService.CurrentTime.Changed += OnTimeChanged;
     }
 
-    public void Disable()
+    public void Dispose()
     {
-        _timerService.TimeChanged -= OnTimeChanged;
+        _timerService.CurrentTime.Changed -= OnTimeChanged;
     }
 
     private void OnTimeChanged(float value)

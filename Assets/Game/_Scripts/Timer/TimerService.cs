@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class TimerService
 {
-    public event Action<float> TimeChanged;
     public event Action TimesUp;
 
     private MonoBehaviour _mono;
-    private float _timer;
-    private float _currentTime;
-    private Coroutine _currentCoroutine;
 
+    private ReactiveVariable<float> _startTime = new ReactiveVariable<float>();
+    private ReactiveVariable<float> _currentTime = new ReactiveVariable<float>();
+
+    private Coroutine _currentCoroutine;
     private bool _isTimerPaused;
 
     public TimerService(MonoBehaviour mono)
@@ -19,7 +19,9 @@ public class TimerService
         _mono = mono;
     }
 
-    public float Timer => _timer;
+    public IReadOnlyVariable<float> StartTime => _startTime;
+    public IReadOnlyVariable<float> CurrentTime => _currentTime;
+    public bool IsUp => _currentTime.Value <= 0;
 
     public void Start(float value)
     {
@@ -31,20 +33,20 @@ public class TimerService
         if (_currentCoroutine != null)
             _mono.StopCoroutine(_currentCoroutine);
 
-        _timer = value;
+        _startTime.Value = value;
 
         _currentCoroutine = _mono.StartCoroutine(StartCountdownProcess());
     }
 
     public void Restart()
     {
-        if (_timer <= 0)
+        if (_startTime.Value <= 0)
             return;
 
-        Start(_timer);
+        Start(_startTime.Value);
     }
 
-    public void PauseTimer()
+    public void TogglePause()
     {
         if (_currentCoroutine == null)
             return;
@@ -54,18 +56,16 @@ public class TimerService
 
     private IEnumerator StartCountdownProcess()
     {
-        _currentTime = _timer;
+        _currentTime.Value = _startTime.Value;
 
-        while (_currentTime > 0)
+        while (_currentTime.Value > 0)
         {
             yield return new WaitWhile(() => _isTimerPaused);
 
-            _currentTime -= Time.deltaTime;
-
-            TimeChanged?.Invoke(_currentTime);
+            _currentTime.Value -= Time.deltaTime;
         }
 
-        _currentTime = 0;
+        _currentTime.Value = 0;
 
         TimesUp?.Invoke();
     }

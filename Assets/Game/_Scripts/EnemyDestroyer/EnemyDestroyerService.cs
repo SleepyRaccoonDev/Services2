@@ -6,7 +6,7 @@ public class EnemyDestroyerService
 {
     private class EnemyEntry
     {
-        public Enemy Enemy;
+        public EnemyExample Enemy;
         public Func<bool> Condition;
     }
 
@@ -14,7 +14,7 @@ public class EnemyDestroyerService
 
     public int EnemyCount => _enemies.Count;
 
-    public void RegisterEnemy(Enemy enemy, Func<bool> condition)
+    public void RegisterEnemy(EnemyExample enemy, Func<bool> condition)
     {
         _enemies.Add(new EnemyEntry
         {
@@ -38,10 +38,4 @@ public class EnemyDestroyerService
 
         Debug.Log($"Количество живых врагов: {_enemies.Count}");
     }
-
-    public bool IsDeadCondition(IKillable enemy) => enemy.IsDead;
-
-    public bool TimerCondition(IKillable enemy) => enemy.LifeTime <= 0;
-
-    public bool CountCondition(int count) => EnemyCount <= count;
 }

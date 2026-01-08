@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class TimerHealthViewer
+public class TimerHealthViewer : IDisposable
 {
     private TimerService _timerService;
 
@@ -20,12 +21,12 @@ public class TimerHealthViewer
 
         _factory = new Factory<Transform>();
 
-        _timerService.TimeChanged += OnTimeChanged;
+        _timerService.CurrentTime.Changed += OnTimeChanged;
     }
 
-    public void Disable()
+    public void Dispose()
     {
-        _timerService.TimeChanged -= OnTimeChanged;
+        _timerService.CurrentTime.Changed -= OnTimeChanged;
     }
 
     private void OnTimeChanged(float value)

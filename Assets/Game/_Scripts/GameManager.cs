@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private const int MinRangeValue = -50;
+    private const int MinRangeValue = 0;
     private const int MaxRangeValue = 51;
 
     [Header("Wallet")]
@@ -19,10 +19,6 @@ public class GameManager : MonoBehaviour
     private WalletService _walletService;
 
     private TimerService _timerService;
-
-    private TimerViewer _timerViewer;
-    private TimerSliderViewer _timerSliderViewer;
-    private TimerHealthViewer _timerHealthViewer;
 
     [Header("Timer")]
 
@@ -40,7 +36,7 @@ public class GameManager : MonoBehaviour
     [Header("Enemy")]
 
     [SerializeField] private Transform _enemyParent;
-    [SerializeField] private Enemy _enemyPrefub;
+    [SerializeField] private EnemyExample _enemyPrefub;
     [SerializeField] private int _maxCountForDeath;
 
     private List<IDisposable> _disposables = new();
@@ -59,9 +55,9 @@ public class GameManager : MonoBehaviour
 
         _timerService = new TimerService(this);
 
-        _timerViewer = new TimerViewer(_timerService, _textMeshTimer);
-        _timerSliderViewer = new TimerSliderViewer(_timerService, _sliderTimer);
-        _timerHealthViewer = new TimerHealthViewer(_timerService, _healthParent, _healthIconPrefab);
+        _disposables.Add(new TimerViewer(_timerService, _textMeshTimer));
+        _disposables.Add(new TimerSliderViewer(_timerService, _sliderTimer));
+        _disposables.Add(new TimerHealthViewer(_timerService, _healthParent, _healthIconPrefab));
 
         _enemyDestroyerService = new EnemyDestroyerService();
     }
@@ -70,24 +66,32 @@ public class GameManager : MonoBehaviour
     {
         foreach (IDisposable disposable in _disposables)
             disposable.Dispose();
-
-        _timerViewer.Disable();
-        _timerSliderViewer.Disable();
-        _timerHealthViewer.Disable();
     }
 
     private void Update()
     {
-        if (_inputSystem.GetKeyDownAlpha1())
+        if (_inputSystem.GetKeyDownAlphaQ())
         {
             int value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
-            _walletService.TryChangeAmountOnCurrency(CurrencyType.Energy, value);
+            _walletService.TrySpend(CurrencyType.Energy, value);
 
             value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
-            _walletService.TryChangeAmountOnCurrency(CurrencyType.Diamonds, value);
+            _walletService.TrySpend(CurrencyType.Diamonds, value);
 
             value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
-            _walletService.TryChangeAmountOnCurrency(CurrencyType.Money, value);
+            _walletService.TrySpend(CurrencyType.Money, value);
+        }
+
+        if (_inputSystem.GetKeyDownAlphaW())
+        {
+            int value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
+            _walletService.Add(CurrencyType.Energy, value);
+
+            value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
+            _walletService.Add(CurrencyType.Diamonds, value);
+
+            value = UnityEngine.Random.Range(MinRangeValue, MaxRangeValue);
+            _walletService.Add(CurrencyType.Money, value);
         }
 
         if (_inputSystem.GetKeyDownAlpha2())
@@ -102,32 +106,39 @@ public class GameManager : MonoBehaviour
 
         if (_inputSystem.GetKeyDownAlpha4())
         {
-            _timerService.PauseTimer();
+            _timerService.TogglePause();
         }
 
         if (_inputSystem.GetKeyDownAlpha5())
         {
-            Enemy enemy = EnemyCreator();
-            _enemyDestroyerService.RegisterEnemy(enemy, () => _enemyDestroyerService.IsDeadCondition(enemy));
+            EnemyExample enemy = EnemyCreator();
+            _enemyDestroyerService.RegisterEnemy(enemy, () => enemy.IsDead);
         }
 
         if (_inputSystem.GetKeyDownAlpha6())
         {
-            Enemy enemy = EnemyCreator();
-            enemy.SetLifeTime(_timerValue);
-            _enemyDestroyerService.RegisterEnemy(enemy, () => _enemyDestroyerService.TimerCondition(enemy));
+            EnemyExample enemy = EnemyCreator();
+
+            var timer = new TimerService(this);
+            timer.Start(10);
+
+            _enemyDestroyerService.RegisterEnemy(enemy, () => timer.IsUp);
         }
 
         if (_inputSystem.GetKeyDownAlpha7())
         {
-            Enemy enemy = EnemyCreator();
-            _enemyDestroyerService.RegisterEnemy(enemy, () => _enemyDestroyerService.CountCondition(_maxCountForDeath));
+            EnemyExample enemy = EnemyCreator();
+
+            var timer = new TimerService(this);
+            timer.Start(5);
+
+            _enemyDestroyerService.RegisterEnemy(enemy, () => timer.IsUp && _enemyDestroyerService.EnemyCount <= 10);
         }
 
         _enemyDestroyerService.Update();
     }
 
-    private Enemy EnemyCreator()
+    private EnemyExample EnemyCreator()
     {
         return GameObject.Instantiate(_enemyPrefub, _enemyParent);
     }
