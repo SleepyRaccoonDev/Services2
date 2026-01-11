@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 
 public enum ItemCategory { Weapon, Armor, Ammo, Quest, Other }
 public enum ItemFamily { None, Sword, Arrow, Shield }
@@ -16,7 +16,8 @@ public class Inventory
         if (items != null)
             _items = new Dictionary<Item, ReactiveVariable<int>>(items);
 
-        MaxSize = maxSize;
+        if (maxSize > 0)
+            MaxSize = maxSize;
     }
 
     public int MaxSize { get; }
@@ -32,7 +33,7 @@ public class Inventory
     public bool TryAdd(Item item, int count)
     {
         if (count <= 0)
-            return false;
+            throw new Exception($"Добавляемое значение {count} для {item.Name} не корректно!");
 
         if (MaxSize == CurrentSize)
         {

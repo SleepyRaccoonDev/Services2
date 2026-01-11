@@ -2278,36 +2278,90 @@ MonoBehaviour:
   _orkPrefab: {fileID: 4314970143941957907, guid: 96fbd6bc76e1943319f811234317fc7f,
     type: 3}
   _elfProperties:
-  - <Agility>k__BackingField: 1
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Agility>k__BackingField: 1
     <Evasion>k__BackingField: 1
     <Control>k__BackingField: 1
-  - <Agility>k__BackingField: 2
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Agility>k__BackingField: 2
     <Evasion>k__BackingField: 2
     <Control>k__BackingField: 2
-  - <Agility>k__BackingField: 3
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Agility>k__BackingField: 3
     <Evasion>k__BackingField: 3
     <Control>k__BackingField: 3
   _orkProperties:
-  - <Strength>k__BackingField: 1
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Strength>k__BackingField: 1
     <Armor>k__BackingField: 0.4
     <MageResistence>k__BackingField: 0.59
     <AggressionRadius>k__BackingField: 1
-  - <Strength>k__BackingField: 2
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Strength>k__BackingField: 2
     <Armor>k__BackingField: 0.38
     <MageResistence>k__BackingField: 0.55
     <AggressionRadius>k__BackingField: 2
-  - <Strength>k__BackingField: 3
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Strength>k__BackingField: 3
     <Armor>k__BackingField: 0.91
     <MageResistence>k__BackingField: 0.69
     <AggressionRadius>k__BackingField: 3
   _dragonProperties:
-  - <Mana>k__BackingField: 1
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Mana>k__BackingField: 1
     <Fear>k__BackingField: 1
     <Greed>k__BackingField: 1
-  - <Mana>k__BackingField: 2
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Mana>k__BackingField: 2
     <Fear>k__BackingField: 2
     <Greed>k__BackingField: 2
-  - <Mana>k__BackingField: 3
+  - <CommonProperties>k__BackingField:
+      <Health>k__BackingField: 0
+      <Damage>k__BackingField: 0
+      <AttackSpeed>k__BackingField: 0
+      <DamageRange>k__BackingField: 0
+      <DelayBeforeAttack>k__BackingField: 0
+    <Mana>k__BackingField: 3
     <Fear>k__BackingField: 3
     <Greed>k__BackingField: 3
 --- !u!4 &1554024005

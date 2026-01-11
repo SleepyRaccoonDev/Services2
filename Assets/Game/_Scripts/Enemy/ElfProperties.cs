@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class ElfProperties
+public class ElfProperties : EnemySettings
 {
     [field: SerializeField, Min(0)] public float Agility { get; private set; }
     [field: SerializeField, Min(0)] public float Evasion { get; private set; }

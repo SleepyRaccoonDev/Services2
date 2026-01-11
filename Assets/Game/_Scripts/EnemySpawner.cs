@@ -21,17 +21,19 @@ public class EnemySpawner : MonoBehaviour
         for(int i = 0; i < _countOfEachEnemy; i++)
         {
             var randomElement1 = GetRandomElement(_elfProperties);
-            Creator(_elfPrefab, randomElement1);
+            Create(_elfPrefab, randomElement1);
 
             var randomElement2 = GetRandomElement(_dragonProperties);
-            Creator(_dragonPrefab, randomElement2);
+            Create(_dragonPrefab, randomElement2);
 
             var randomElement3 = GetRandomElement(_orkProperties);
-            Creator(_orkPrefab, randomElement3);
+            Create(_orkPrefab, randomElement3);
         }
     }
 
-    private void Creator<TEnemy, TSettings>(TEnemy enemyPrefab, TSettings settings) where TEnemy : Enemy<TSettings>
+    public void Create<TEnemy, TSettings>(TEnemy enemyPrefab, TSettings settings)
+        where TEnemy : Enemy<TSettings>
+        where TSettings : EnemySettings
     {
         TEnemy instance = Instantiate(enemyPrefab);
         instance.Initialize(settings);

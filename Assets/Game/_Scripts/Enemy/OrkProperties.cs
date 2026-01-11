@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class OrkProperties
+public class OrkProperties : EnemySettings
 {
     [field: SerializeField, Min(0)] public float Strength { get; private set; }
     [field: SerializeField, Range(0, 1)] public float Armor { get; private set; }

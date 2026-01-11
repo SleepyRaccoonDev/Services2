@@ -1,17 +1,15 @@
 using UnityEngine;
 
-public class Enemy<T> : MonoBehaviour
+public class Enemy<TSettings> : MonoBehaviour where TSettings : EnemySettings
 {
-    [field: SerializeField] public virtual T LocalProperties { get; private set; }
-
-    [field: SerializeField] protected CommonProperties CommonProperties { get; private set; }
+    [field: SerializeField] public virtual TSettings LocalProperties { get; private set; }
 
     protected virtual void Kill()
     {
         GameObject.Destroy(gameObject);
     }
 
-    public virtual void Initialize (T property)
+    public virtual void Initialize (TSettings property)
     {
         LocalProperties = property;
     }
