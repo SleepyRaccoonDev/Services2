@@ -69,7 +69,7 @@ public class Inventory
             return false;
 
         if (items.Count > 1)
-            Debug.Log($"Ошибка инвентаря, в нём {items.Count} штук {name} предметов! Получен первый попавшийся!");
+            throw new Exception($"Ошибка инвентаря, в нём {items.Count} штук {name} предметов! Получен первый попавшийся!");
         
         Item item = _items.Keys.First(v => v.Name == name);
 

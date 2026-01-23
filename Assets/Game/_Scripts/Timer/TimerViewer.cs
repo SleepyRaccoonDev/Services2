@@ -1,12 +1,12 @@
-using System;
 using TMPro;
+using UnityEngine;
 
-public class TimerViewer :IDisposable
+public class TimerViewer :MonoBehaviour
 {
     private TimerService _timerService;
     private TextMeshProUGUI _textMeshPro;
 
-    public TimerViewer(TimerService timerService, TextMeshProUGUI textMeshPro)
+    public void Initialize(TimerService timerService, TextMeshProUGUI textMeshPro)
     {
         _timerService = timerService;
         _textMeshPro = textMeshPro;
@@ -14,13 +14,7 @@ public class TimerViewer :IDisposable
         _timerService.CurrentTime.Changed += OnTimeChanged;
     }
 
-    public void Dispose()
-    {
-        _timerService.CurrentTime.Changed -= OnTimeChanged;
-    }
+    public void OnDisable() => _timerService.CurrentTime.Changed -= OnTimeChanged;
 
-    private void OnTimeChanged(float value)
-    {
-        _textMeshPro.SetText($"{value:0.00}");
-    }
+    private void OnTimeChanged(float value) => _textMeshPro.SetText($"{value:0.00}");
 }

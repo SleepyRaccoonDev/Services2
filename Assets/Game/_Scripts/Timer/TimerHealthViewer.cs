@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-public class TimerHealthViewer : IDisposable
+public class TimerHealthViewer : MonoBehaviour
 {
     private TimerService _timerService;
 
@@ -12,7 +11,7 @@ public class TimerHealthViewer : IDisposable
 
     private int _currentValue;
 
-    public TimerHealthViewer(TimerService timerService, Transform parent, Transform healthIconPrefub)
+    public void Initialize(TimerService timerService, Transform parent, Transform healthIconPrefub)
     {
         _timerService = timerService;
 
@@ -24,10 +23,7 @@ public class TimerHealthViewer : IDisposable
         _timerService.CurrentTime.Changed += OnTimeChanged;
     }
 
-    public void Dispose()
-    {
-        _timerService.CurrentTime.Changed -= OnTimeChanged;
-    }
+    public void OnDisable() => _timerService.CurrentTime.Changed -= OnTimeChanged;
 
     private void OnTimeChanged(float value)
     {

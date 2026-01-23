@@ -1,13 +1,13 @@
-using System;
 using TMPro;
+using UnityEngine;
 
-public class WalletCurrencyViewer : IDisposable
+public class WalletCurrencyViewer : MonoBehaviour
 {
     private WalletService _walletService;
     private TextMeshProUGUI _textMesh;
     private CurrencyType _currencyType;
 
-    public WalletCurrencyViewer(WalletService walletService, TextMeshProUGUI textMesh, CurrencyType currencyType)
+    public void Initialize(WalletService walletService, TextMeshProUGUI textMesh, CurrencyType currencyType)
     {
         _walletService = walletService;
         _textMesh = textMesh;
@@ -16,13 +16,7 @@ public class WalletCurrencyViewer : IDisposable
         walletService.Currencies[_currencyType].Changed += OnCurrencyChanged;
     }
 
-    public void Dispose()
-    {
-        _walletService.Currencies[_currencyType].Changed -= OnCurrencyChanged;
-    }
+    private void OnDisable() => _walletService.Currencies[_currencyType].Changed -= OnCurrencyChanged;
 
-    private void OnCurrencyChanged(float value)
-    {
-        _textMesh.SetText($"{value}");
-    }
+    private void OnCurrencyChanged(int value) => _textMesh.SetText($"{value}");
 }

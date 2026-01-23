@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -21,22 +23,38 @@ public class EnemySpawner : MonoBehaviour
         for(int i = 0; i < _countOfEachEnemy; i++)
         {
             var randomElement1 = GetRandomElement(_elfProperties);
-            Create(_elfPrefab, randomElement1);
+            Create(randomElement1, new Vector3(0,0,0));
 
             var randomElement2 = GetRandomElement(_dragonProperties);
-            Create(_dragonPrefab, randomElement2);
+            Create(randomElement2, new Vector3(-2, 0, 0));
 
             var randomElement3 = GetRandomElement(_orkProperties);
-            Create(_orkPrefab, randomElement3);
+            Create(randomElement3, new Vector3(2, 0, 0));
         }
     }
 
-    public void Create<TEnemy, TSettings>(TEnemy enemyPrefab, TSettings settings)
-        where TEnemy : Enemy<TSettings>
-        where TSettings : EnemySettings
+    public Enemy Create(EnemySettings settings, Vector3 spawnPosition)
     {
-        TEnemy instance = Instantiate(enemyPrefab);
-        instance.Initialize(settings);
+        switch (settings)
+        {
+            case ElfProperties elfProperties:
+                var elf = GameObject.Instantiate(_elfPrefab, spawnPosition, Quaternion.identity);
+                elf.Initialize(elfProperties);
+                return elf;
+
+            case OrkProperties orkProperties:
+                var ork = GameObject.Instantiate(_orkPrefab, spawnPosition, Quaternion.identity);
+                ork.Initialize(orkProperties);
+                return ork;
+
+            case DragonProperties dragonProperties:
+                var dragon = GameObject.Instantiate(_dragonPrefab, spawnPosition, Quaternion.identity);
+                dragon.Initialize(dragonProperties);
+                return dragon;
+
+            default:
+                throw new Exception($"Конфиги не найдены");
+        }
     }
 
     private T GetRandomElement<T>(T[] array)

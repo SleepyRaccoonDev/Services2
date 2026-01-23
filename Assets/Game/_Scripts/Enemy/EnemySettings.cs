@@ -3,5 +3,5 @@ using UnityEngine;
 [System.Serializable]
 public class EnemySettings
 {
-    [field: SerializeField] protected CommonProperties CommonProperties { get; private set; }
+    [field: SerializeField] public CommonProperties CommonProperties { get; private set; }
 }

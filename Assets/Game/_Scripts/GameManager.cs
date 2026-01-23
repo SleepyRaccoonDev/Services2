@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textMeshEnergy;
     [SerializeField] private TextMeshProUGUI _textMeshMoney;
 
+    [SerializeField] private WalletCurrencyViewer _walletCurrencyViewerDiamonds;
+    [SerializeField] private WalletCurrencyViewer _walletCurrencyViewerEnergy;
+    [SerializeField] private WalletCurrencyViewer _walletCurrencyViewerMoney;
+
     private WalletService _walletService;
 
     private TimerService _timerService;
@@ -25,6 +29,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _textMeshTimer;
     [SerializeField] private Slider _sliderTimer;
     [SerializeField] private float _timerValue;
+
+    [SerializeField] private TimerViewer _timerViewer;
+    [SerializeField] private TimerSliderViewer _timerSliderViewer;
+    [SerializeField] private TimerHealthViewer _timerHealthViewer;
 
     [SerializeField] private Transform _healthParent;
     [SerializeField] private Transform _healthIconPrefab;
@@ -49,15 +57,15 @@ public class GameManager : MonoBehaviour
 
         _ui.SetActive(true);
 
-        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshDiamonds, CurrencyType.Diamonds));
-        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshEnergy, CurrencyType.Energy));
-        _disposables.Add(new WalletCurrencyViewer(_walletService, _textMeshMoney, CurrencyType.Money));
+        _walletCurrencyViewerDiamonds.Initialize(_walletService, _textMeshDiamonds, CurrencyType.Diamonds);
+        _walletCurrencyViewerEnergy.Initialize(_walletService, _textMeshEnergy, CurrencyType.Energy);
+        _walletCurrencyViewerMoney.Initialize(_walletService, _textMeshMoney, CurrencyType.Money);
 
         _timerService = new TimerService(this);
 
-        _disposables.Add(new TimerViewer(_timerService, _textMeshTimer));
-        _disposables.Add(new TimerSliderViewer(_timerService, _sliderTimer));
-        _disposables.Add(new TimerHealthViewer(_timerService, _healthParent, _healthIconPrefab));
+        _timerViewer.Initialize(_timerService, _textMeshTimer);
+        _timerSliderViewer.Initialize(_timerService, _sliderTimer);
+        _timerHealthViewer.Initialize(_timerService, _healthParent, _healthIconPrefab);
 
         _enemyDestroyerService = new EnemyDestroyerService();
     }
