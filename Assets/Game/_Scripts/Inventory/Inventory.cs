@@ -58,6 +58,9 @@ public class Inventory
 
     public bool TryGetItemsBy(string name, int count, out Dictionary<Item, ReactiveVariable<int>> result)
     {
+        if (count <= 0)
+            throw new Exception($"Добавляемое значение {count} не корректно!");
+
         result = null;
 
         if (string.IsNullOrEmpty(name) || count <= 0)
